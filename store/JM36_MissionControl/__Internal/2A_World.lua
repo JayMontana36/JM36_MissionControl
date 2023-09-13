@@ -20,8 +20,7 @@ local entities_get_position = entities.get_position
 
 
 
-local PlayerPedId = PlayerPedId
-local GetEntityCoords = GetEntityCoords
+local GetFinalRenderedCamCoord = GetFinalRenderedCamCoord
 local GetEntityPopulationType = GetEntityPopulationType
 local IsEntityAMissionEntity = IsEntityAMissionEntity
 local IsEntityDead = IsEntityDead
@@ -97,7 +96,7 @@ World = setmetatable
 							case "_HandlesM":
 								local _Value = Value
 								Value = {}
-								local SelfCoords = Player.Coords
+								local SelfCoords = GetFinalRenderedCamCoord() --Player.Coords
 								local Count = 0
 								for _Value as Pointer do
 									if (Handle := entities_has_handle(Pointer) and entities_pointer_to_handle(Pointer)) and GetEntityPopulationType(Handle) == 7 and IsEntityAMissionEntity(Handle) then
