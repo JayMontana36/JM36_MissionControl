@@ -15,7 +15,7 @@ local MenuRootVeh;MenuRootVeh = MenuRoot:list("View Vehs (M) List", DummyCmdTbl,
 	function()
 		local Vehs = World.HandlesVehiclesM
 		for Vehs as Veh do
-			local VehMenu = MenuRootVeh:list(("%s (%sm) %s | %s %s"):format(Veh.ModelString, RoundNumber(Veh.Distance), Veh.PropertyOf, Veh.ScriptStr, Veh.ScriptInt), DummyCmdTbl, "")
+			local VehMenu = MenuRootVeh:list(("%s (%sm) %s"):format(Veh.ModelString, RoundNumber(Veh.Distance), Veh.PropertyOf), DummyCmdTbl, "")
 			VehMenu:action("Kill Veh", DummyCmdTbl, "", function()
 				local Handle = Veh.Handle
 				while DoesEntityExist(Handle) and not NetworkRequestControlOfEntity(Handle) do

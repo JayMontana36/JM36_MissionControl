@@ -68,7 +68,7 @@ local MenuRootPed;MenuRootPed = MenuRoot:list("View Peds (M) List", DummyCmdTbl,
 		local Peds = World.HandlesPedsM
 		for Peds as Ped do
 			local Handle = Ped.Handle
-			local PedMenu = MenuRootPed:list(("%s (%sm) %s | %s %s"):format(Ped.ModelString, RoundNumber(Ped.Distance), Ped.RelationshipToSelf, Ped.ScriptStr, Ped.ScriptInt), DummyCmdTbl, "")
+			local PedMenu = MenuRootPed:list(("%s (%sm)"):format(Ped.ModelString, RoundNumber(Ped.Distance)), DummyCmdTbl, "")
 			PedMenu:action("Kill Ped", DummyCmdTbl, "", function()
 				while DoesEntityExist(Handle) and not NetworkRequestControlOfEntity(Handle) do
 					yield()
