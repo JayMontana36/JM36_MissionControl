@@ -57,10 +57,6 @@ local MenuRootVeh;MenuRootVeh = MenuRoot:list("View Vehs (M) List", DummyCmdTbl,
 					yield()
 				end
 				if DoesEntityExist(Handle) then
-					util_spoof_script(Veh.ScriptStr, function()
-						SetEntityAsMissionEntity(Handle, true, true)
-						DeleteEntity(Handle)
-					end)
 					SetEntityAsMissionEntity(Handle, true, true)
 					DeleteEntity(Handle)
 				end

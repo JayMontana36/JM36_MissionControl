@@ -38,10 +38,6 @@ local MenuRootObj;MenuRootObj = MenuRoot:list("View Objs (M) List", DummyCmdTbl,
 					yield()
 				end
 				if DoesEntityExist(Handle) then
-					util_spoof_script(Obj.ScriptStr, function()
-						SetEntityAsMissionEntity(Handle, true, true)
-						DeleteEntity(Handle)
-					end)
 					SetEntityAsMissionEntity(Handle, true, true)
 					DeleteEntity(Handle)
 				end

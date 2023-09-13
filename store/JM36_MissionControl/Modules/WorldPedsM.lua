@@ -105,14 +105,6 @@ local MenuRootPed;MenuRootPed = MenuRoot:list("View Peds (M) List", DummyCmdTbl,
 					yield()
 				end
 				if DoesEntityExist(Handle) then
-					--[[print("A", util_spoof_script(Ped.ScriptStr, function()
-						SetEntityAsMissionEntity(Handle, true, true)
-						DeleteEntity(Handle)
-					end))
-					print("B", util.spoof_script_thread(Ped.ScriptInt, function()
-						SetEntityAsMissionEntity(Handle, true, true)
-						DeleteEntity(Handle)
-					end))]]
 					SetEntityAsMissionEntity(Handle, true, true)
 					DeleteEntity(Handle)
 				end
