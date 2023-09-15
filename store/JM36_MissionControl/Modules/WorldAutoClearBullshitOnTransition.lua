@@ -1,3 +1,4 @@
+local Vehicle = Info.Player.Vehicle
 local World = Info.World
 
 local util_is_session_transition_active = util.is_session_transition_active
@@ -11,9 +12,10 @@ local CT_HP = JM36.CreateThread_HighPriority
 local yield = util.yield_once
 
 local function Clear(Table)
+	local EntityExempt = Vehicle.IsOp and Vehicle.IsIn
 	for Table as Entry do
 		local Handle = Entry.Handle
-		if DoesEntityExist(Handle) and NetworkHasControlOfEntity(Handle) then
+		if Handle ~= EntityExempt and DoesEntityExist(Handle) and NetworkHasControlOfEntity(Handle) then
 			SetEntityAsMissionEntity(Handle, true, true)
 			DeleteEntity(Handle)
 		end
