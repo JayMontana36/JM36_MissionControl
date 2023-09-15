@@ -23,11 +23,10 @@ local function SortByDist(a,b)
 	return a.Dist < b.Dist
 end
 
-local function GetObjectivePositionsSortedLightA()
+local function GetObjectivePositions()
 	local BlipSprite = GetStandardBlipEnumId()
 	local Blip = GetFirstBlipInfoId(BlipSprite)
 	if Blip ~= 0 then
-		local Coords = Player.Coords
 		local ArrayTemp = {}
 		local ArrayTempCount = 0
 		repeat
@@ -46,14 +45,23 @@ local function GetObjectivePositionsSortedLightA()
 					{
 						Blip = Blip,
 						Coords = BlipCoords,
-						Dist = Coords:distance(BlipCoords)
 					}
 			end
 			Blip = GetNextBlipInfoId(BlipSprite)
 		until Blip == 0
-		
-		if ArrayTempCount == 0 then return end
-		
+		if ArrayTempCount ~= 0 then
+			return ArrayTemp, ArrayTempCount
+		end
+	end
+end
+
+local function GetObjectivePositionsSortedLightA()
+	local ArrayTemp, ArrayTempCount = GetObjectivePositions()
+	if ArrayTemp then
+		local Coords = Player.Coords
+		for i=1,ArrayTempCount do
+			ArrayTemp[i].Dist = Coords:distance(ArrayTemp[i].Coords)
+		end
 		local ArrayCoords = {}
 		local ArrayCoordsCount = 0
 		repeat
