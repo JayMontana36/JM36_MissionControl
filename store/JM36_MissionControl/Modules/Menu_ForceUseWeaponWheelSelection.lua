@@ -12,7 +12,7 @@ local yield = util.yield_once
 local Enabled
 --local TimeLastPressed = 0
 --local WeaponWheelLastHighlighted
-local MenuRoot = menu.my_root():toggle("Enhance Weapon Selection", _G2.DummyCmdTbl, "", function(on)
+local MenuRoot = menu.my_root():toggle("Force use weapon wheel selection", _G2.DummyCmdTbl, "", function(on)
 	Enabled = on
 	if Enabled then
 		CT(function()
