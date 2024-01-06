@@ -5,10 +5,11 @@ local World
 
 
 
-local entities_get_all_vehicles_as_pointers	= entities.get_all_vehicles_as_pointers	;	entities.get_all_vehicles_as_pointers	= function()return World.PointersVehicles end
-local entities_get_all_peds_as_pointers		= entities.get_all_peds_as_pointers		;	entities.get_all_peds_as_pointers		= function()return World.PointersPeds end
-local entities_get_all_objects_as_pointers	= entities.get_all_objects_as_pointers	;	entities.get_all_objects_as_pointers	= function()return World.PointersObjects end
-local entities_get_all_pickups_as_pointers	= entities.get_all_pickups_as_pointers	;	entities.get_all_pickups_as_pointers	= function()return World.PointersPickups end
+local entities_get_all_vehicles_as_pointers	= entities.get_all_vehicles_as_pointers	;	entities.get_all_vehicles_as_pointers		= function()return World.PointersVehicles end
+local entities_get_all_peds_as_pointers		= entities.get_all_peds_as_pointers		;	entities.get_all_peds_as_pointers			= function()return World.PointersPeds end
+local entities_get_all_objects_as_pointers	= entities.get_all_objects_as_pointers	;	entities.get_all_objects_as_pointers		= function()return World.PointersObjects end
+local entities_get_all_pickups_as_pointers	= entities.get_all_pickups_as_pointers	;	entities.get_all_pickups_as_pointers		= function()return World.PointersPickups end
+local entities_get_all_pickups_as_handles	= entities.get_all_pickups_as_handles	;	entities.get_all_pickups_as_handles			= function()return World.HandlesPickups end
 
 
 
@@ -85,14 +86,13 @@ World = setmetatable
 								Value = Self.PointersObjects
 								break
 							case "HandlesPickupsM":
-								Value = Self.PointersPickups
+								Value = entities_get_all_pickups_as_handles()
 								break
 						end
 						switch Key do
 							case "HandlesVehiclesM":
 							case "HandlesPedsM":
 							case "HandlesObjectsM":
-							case "HandlesPickupsM":
 							case "_HandlesM":
 								local _Value = Value
 								Value = {}
@@ -117,6 +117,33 @@ World = setmetatable
 											ScriptInt = ScriptInt,
 										}
 									end
+								end
+								table_sort(Value,SortHandles)
+								break
+							case "HandlesPickupsM":
+								local _Value = Value
+								Value = {}
+								local SelfCoords = GetFinalRenderedCamCoord() --Player.Coords
+								local Count = 0
+								for _Value as Handle do
+									local HandleObject = GET_PICKUP_OBJECT(Handle)
+									local Model = GET_ENTITY_MODEL(HandleObject)
+									local Coords = GET_PICKUP_COORDS(Handle)
+									local ScriptStr, ScriptInt = GetEntityScript(HandleObject,MemPtr)
+									Count += 1
+									Value[Count] =
+									{
+										--Pointer = Pointer,
+										--Handle = Handle,
+										Handle = HandleObject,
+										ModelHash = Model,
+										ModelString = util_reverse_joaat(Model),
+										--Dead = IsEntityDead(HandleObject),
+										Coords = Coords,
+										Distance = Coords:distance(SelfCoords),
+										ScriptStr = ScriptStr,
+										ScriptInt = ScriptInt,
+									}
 								end
 								table_sort(Value,SortHandles)
 						end

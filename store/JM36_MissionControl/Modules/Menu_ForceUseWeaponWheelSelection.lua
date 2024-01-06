@@ -1,5 +1,6 @@
 local Info = Info
 local Player = Info.Player
+local Vehicle = Player.Vehicle
 
 local GiveWeaponToPed = GiveWeaponToPed
 local HudGetWeaponWheelCurrentlyHighlighted = HudGetWeaponWheelCurrentlyHighlighted
@@ -17,7 +18,9 @@ local MenuRoot = menu.my_root():toggle("Force use weapon wheel selection", _G2.D
 	if Enabled then
 		CT(function()
 			while Enabled do
-				GiveWeaponToPed(Player.Ped, HudGetWeaponWheelCurrentlyHighlighted(), 9999, true, true)
+				if not Vehicle.IsIn then
+					GiveWeaponToPed(Player.Ped, HudGetWeaponWheelCurrentlyHighlighted(), 9999, true, true)
+				end
 				--[[local WeaponWheelCurrentlyHighlighted = HudGetWeaponWheelCurrentlyHighlighted()
 				if (Info.Time - TimeLastPressed) <= 100 and IsControlJustReleased(2,37) then
 					if GetSelectedPedWeapon(Player.Ped) ~= Zero then
