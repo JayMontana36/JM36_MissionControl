@@ -62,7 +62,6 @@ end)
 
 
 
-
 local MenuRootPed;MenuRootPed = MenuRoot:list("View Peds (M) List", DummyCmdTbl, "",
 	function()
 		local Peds = World.HandlesPedsM
