@@ -9,6 +9,22 @@ local util_spoof_script = util.spoof_script
 local DummyCmdTbl = _G2.DummyCmdTbl
 local MenuRoot = Info.MenuLayout.World:list("Objs (M)", DummyCmdTbl, "")
 
+do
+	local HashesCameras =
+	{
+		
+	}
+	MenuRoot:toggle_loop("Delete Cameras (M)", DummyCmdTbl, "", function()
+		local Objs = World.HandlesObjectsM
+		for Objs as Obj do
+			if HashesCameras[Obj.ModelHash] and NetworkRequestControlOfEntity(Obj.Handle) then
+				SetEntityAsMissionEntity(Obj.Handle, false, true)
+				DeleteEntity(Obj.Handle)
+			end
+		end
+	end)
+end
+
 
 
 local MenuRootObj;MenuRootObj = MenuRoot:list("View Objs (M) List", DummyCmdTbl, "",
