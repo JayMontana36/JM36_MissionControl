@@ -53,7 +53,7 @@ Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(o
 		end)
 	end
 end, Enabled)
-Menu:toggle("For Missions/Heists Only", DummyCmdTbl, "Enable Automatic Script Host Rotation Only In Missions/Heists", function(on)
+Menu:toggle("For Missions/Heists Only", DummyCmdTbl, "Limit Automatic Script Host Rotation To Missions/Heists", function(on)
 	ActivitySessionOnly = on
 end, Enabled)
 Menu:slider("Set Automatic Script Host Rotation Delay", DummyCmdTbl, "", 15, 45, Delay/1000, 5, function(value)
