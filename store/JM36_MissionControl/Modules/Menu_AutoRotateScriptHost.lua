@@ -5,9 +5,9 @@ local yield = JM36.yield
 local yield_once = JM36.yield_once
 
 local players_get_host = players.get_host
+local players_get_script_host = players.get_script_host
 local util_is_session_started = util.is_session_started
 local util_is_session_transition_active = util.is_session_transition_active
-local players_get_script_host = players.get_script_host
 
 local NetworkIsActivitySession = NetworkIsActivitySession
 
@@ -15,13 +15,13 @@ local NetworkIsActivitySession = NetworkIsActivitySession
 
 local PlayerScriptHostRefs = {[0]=false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false} -- 0-31
 
-local GiveScrHostToNetHost = function()
+local GiveScriptHostToSessionHost = function()
 	if PlayerScriptHostRef := PlayerScriptHostRefs[players_get_host()] then
 		PlayerScriptHostRef:trigger()
 	end
 end
 
-local Delay, Enabled = 20000, false
+local Enabled, ActivitySessionOnly, Delay = false, false, 20000
 
 local Menu = menu.my_root():list("Script Host Rotation Options", DummyCmdTbl, "")
 Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(on)
@@ -30,7 +30,12 @@ Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(o
 			local PlayerId, PlayerScriptHostRef = -1, false
 			while Enabled do
 				if util_is_session_started() and not util_is_session_transition_active() then
-					if not NetworkIsActivitySession() then
+					if NetworkIsActivitySession() then
+						if players_get_host() ~= players_get_script_host() then
+							GiveScriptHostToSessionHost()
+						end
+						yield_once()
+					elseif not ActivitySessionOnly then
 						repeat
 							PlayerId += 1
 							PlayerScriptHostRef = PlayerScriptHostRefs[PlayerId]
@@ -39,19 +44,17 @@ Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(o
 							PlayerScriptHostRef:trigger()
 							yield(Delay)
 						else PlayerId = -1 end
-					else
-						if players_get_host() ~= players_get_script_host() then
-							GiveScrHostToNetHost()
-						end
-						yield_once()
 					end
 				else
 					yield_once()
 				end
 			end
-			GiveScrHostToNetHost()
+			GiveScriptHostToSessionHost()
 		end)
 	end
+end, Enabled)
+Menu:toggle("For Missions/Heists Only", DummyCmdTbl, "Enable Automatic Script Host Rotation Only In Missions/Heists", function(on)
+	ActivitySessionOnly = on
 end, Enabled)
 Menu:slider("Set Automatic Script Host Rotation Delay", DummyCmdTbl, "", 15, 45, Delay/1000, 5, function(value)
 	Delay = value * 1000
