@@ -12,6 +12,7 @@ local MenuRoot = Info.MenuLayout.World:list("Objs (M)", DummyCmdTbl, "")
 do
 	local HashesCameras =
 	{
+		--cctv
 		[0x1140AC51]	= true,--p_cctv_s
 		[0x7C95FA6E]	= true,--prop_cs_cctv
 		[0x20B56CBC]	= true,--prop_cctv_cam_01a
@@ -39,6 +40,10 @@ do
 		[0xF140D36C]	= true,--xm_prop_x17_server_farm_cctv_01
 		[0xBB947154]	= true,--tr_prop_tr_cctv_cam_01a
 		[0x3C8C0EF5]	= true,--tr_prop_tr_camhedz_cctv_01a
+		--cam
+		[0xC81AF9BE]	= true,--v_serv_securitycam_03
+		[0x6E449FDB]	= true,--prop_snow_cam_03a
+		[0xD259965B]	= true,--v_serv_securitycam_1a
 	}
 	MenuRoot:toggle_loop("Delete Cameras (M)", DummyCmdTbl, "", function()
 		local Objs = World.HandlesObjectsM
