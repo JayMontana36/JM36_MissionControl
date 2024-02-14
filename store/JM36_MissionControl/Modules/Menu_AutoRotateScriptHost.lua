@@ -15,8 +15,8 @@ local NetworkIsActivitySession = NetworkIsActivitySession
 
 local PlayerScriptHostRefs = {[0]=false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false} -- 0-31
 
-local GiveScriptHostToSessionHost = function()
-	if PlayerScriptHostRef := PlayerScriptHostRefs[players_get_host()] then
+local GiveScriptHostToPlayer = function(PlayerId)
+	if PlayerScriptHostRef := PlayerScriptHostRefs[PlayerId] then
 		PlayerScriptHostRef:trigger()
 	end
 end
@@ -31,8 +31,8 @@ Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(o
 			while Enabled do
 				if util_is_session_started() and not util_is_session_transition_active() then
 					if NetworkIsActivitySession() then
-						if players_get_host() ~= players_get_script_host() then
-							GiveScriptHostToSessionHost()
+						if (SessionHost := players_get_host()) and SessionHost ~= players_get_script_host() then
+							GiveScriptHostToPlayer(SessionHost)
 						end
 						yield_once()
 					elseif not ActivitySessionOnly then
@@ -49,7 +49,7 @@ Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(o
 					yield_once()
 				end
 			end
-			GiveScriptHostToSessionHost()
+			GiveScriptHostToPlayer(players_get_host())
 		end)
 	end
 end, Enabled)
