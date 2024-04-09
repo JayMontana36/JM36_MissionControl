@@ -94,81 +94,89 @@ World = setmetatable
 							case "HandlesPedsM":
 							case "HandlesObjectsM":
 							case "_HandlesM":
-								local _Value = Value
-								Value = {}
-								local SelfCoords = GetFinalRenderedCamCoord() --Player.Coords
-								local Count = 0
-								for _Value as Pointer do
-									if (Handle := entities_has_handle(Pointer) and entities_pointer_to_handle(Pointer)) and GetEntityPopulationType(Handle) == 7 and IsEntityAMissionEntity(Handle) then
-										local Model = entities_get_model_hash(Pointer)
-										local Coords = entities_get_position(Pointer)
-										local ScriptStr, ScriptInt = GetEntityScript(Handle,MemPtr)
+								do
+									local _Value = Value
+									Value = {}
+									local SelfCoords = GetFinalRenderedCamCoord() --Player.Coords
+									local Count = 0
+									for _Value as Pointer do
+										if (Handle := entities_has_handle(Pointer) and entities_pointer_to_handle(Pointer)) and GetEntityPopulationType(Handle) == 7 and IsEntityAMissionEntity(Handle) then
+											local Model = entities_get_model_hash(Pointer)
+											local Coords = entities_get_position(Pointer)
+											local ScriptStr, ScriptInt = GetEntityScript(Handle,MemPtr)
+											Count += 1
+											Value[Count] =
+											{
+												Pointer = Pointer,
+												Handle = Handle,
+												ModelHash = Model,
+												ModelString = util_reverse_joaat(Model),
+												Dead = IsEntityDead(Handle),
+												Coords = Coords,
+												Distance = Coords:distance(SelfCoords),
+												ScriptStr = ScriptStr,
+												ScriptInt = ScriptInt,
+											}
+										end
+									end
+									table_sort(Value,SortHandles)
+								end
+								break
+							case "HandlesPickupsM":
+								do
+									local _Value = Value
+									Value = {}
+									local SelfCoords = GetFinalRenderedCamCoord() --Player.Coords
+									local Count = 0
+									for _Value as Handle do
+										local HandleObject = GET_PICKUP_OBJECT(Handle)
+										local Model = GET_ENTITY_MODEL(HandleObject)
+										local Coords = GET_PICKUP_COORDS(Handle)
+										local ScriptStr, ScriptInt = GetEntityScript(HandleObject,MemPtr)
 										Count += 1
 										Value[Count] =
 										{
-											Pointer = Pointer,
-											Handle = Handle,
+											--Pointer = Pointer,
+											--Handle = Handle,
+											Handle = HandleObject,
 											ModelHash = Model,
 											ModelString = util_reverse_joaat(Model),
-											Dead = IsEntityDead(Handle),
+											--Dead = IsEntityDead(HandleObject),
 											Coords = Coords,
 											Distance = Coords:distance(SelfCoords),
 											ScriptStr = ScriptStr,
 											ScriptInt = ScriptInt,
 										}
 									end
+									table_sort(Value,SortHandles)
 								end
-								table_sort(Value,SortHandles)
-								break
-							case "HandlesPickupsM":
-								local _Value = Value
-								Value = {}
-								local SelfCoords = GetFinalRenderedCamCoord() --Player.Coords
-								local Count = 0
-								for _Value as Handle do
-									local HandleObject = GET_PICKUP_OBJECT(Handle)
-									local Model = GET_ENTITY_MODEL(HandleObject)
-									local Coords = GET_PICKUP_COORDS(Handle)
-									local ScriptStr, ScriptInt = GetEntityScript(HandleObject,MemPtr)
-									Count += 1
-									Value[Count] =
-									{
-										--Pointer = Pointer,
-										--Handle = Handle,
-										Handle = HandleObject,
-										ModelHash = Model,
-										ModelString = util_reverse_joaat(Model),
-										--Dead = IsEntityDead(HandleObject),
-										Coords = Coords,
-										Distance = Coords:distance(SelfCoords),
-										ScriptStr = ScriptStr,
-										ScriptInt = ScriptInt,
-									}
-								end
-								table_sort(Value,SortHandles)
 						end
 						switch Key do
 							case "HandlesVehiclesM":
-								--local SelfPed = Player.Ped
-								local NetworkPlayerHashes = {}
-								for i=0,31 do
-									if _Player := Players[i] then
-										NetworkPlayerHashes[_Player.NetworkHash] = _Player.Name
+								do
+									--local SelfPed = Player.Ped
+									local NetworkPlayerHashes = {}
+									for i=0,31 do
+										if (_Player := Players[i]) and _Player.NetworkHash then
+											NetworkPlayerHashes[_Player.NetworkHash] = _Player.Name
+										end
 									end
-								end
-								for Value as Veh do
-									local Handle = Veh.Handle
-									Veh.PropertyOf = DecorExistOn(Handle, "Player_Vehicle") and NetworkPlayerHashes[DecorGetInt(Handle, "Player_Vehicle")] or "N/A"
+									for Value as Veh do
+										local Handle = Veh.Handle
+										Veh.PropertyOf = DecorExistOn(Handle, "Player_Vehicle") and NetworkPlayerHashes[DecorGetInt(Handle, "Player_Vehicle")] or "N/A"
+									end
 								end
 								break
 							case "HandlesPedsM":
-								local SelfPed = Player.Ped
-								for Value as Ped do
-									local Handle = Ped.Handle
-									Ped.RelationshipToSelf = GetRelationshipBetweenPeds(Handle, SelfPed)
-									Ped.CombatToSelf = IsPedInCombat(Handle, SelfPed)
-									Ped.Health = GetEntityHealth(Handle)
-									Ped.Armor = GetPedArmour(Handle)
+								do
+									local SelfPed = Player.Ped
+									for Value as Ped do
+										local Handle = Ped.Handle
+										Ped.RelationshipToSelf = GetRelationshipBetweenPeds(Handle, SelfPed)
+										Ped.CombatToSelf = IsPedInCombat(Handle, SelfPed)
+										Ped.Health = GetEntityHealth(Handle)
+										Ped.Armor = GetPedArmour(Handle)
+									end
 								end
 								break
 							case "HandlesObjectsM":
