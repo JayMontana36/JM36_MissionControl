@@ -44,6 +44,8 @@ Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(o
 							PlayerScriptHostRef:trigger()
 							yield(Delay)
 						else PlayerId = -1 end
+					else
+						yield_once()
 					end
 				else
 					yield_once()
