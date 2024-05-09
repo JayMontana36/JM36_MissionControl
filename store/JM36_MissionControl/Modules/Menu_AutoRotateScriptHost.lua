@@ -22,6 +22,14 @@ local GiveScriptHostToPlayer = function(PlayerId)
 end
 
 local Enabled, ActivitySessionOnly, Delay = false, false, 20000
+local ___Pause;do
+	local ARSH = Script("AutoRotateScriptHost")
+	--ARSH.IsEnabled = function()return Enabled end
+	--ARSH.IsPaused = function()return ___Pause end
+	ARSH.Pause = function(State)___Pause=State end
+	--ARSH.IsActivitySessionOnly = function()return ActivitySessionOnly end
+	ARSH.GiveScriptHostToPlayer = GiveScriptHostToPlayer
+end
 
 local Menu = menu.my_root():list("Script Host Rotation Options", DummyCmdTbl, "")
 Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(on)
@@ -31,6 +39,9 @@ Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(o
 			while Enabled do
 				if util_is_session_started() and not util_is_session_transition_active() then
 					if NetworkIsActivitySession() then
+						while ___Pause do
+							yield_once()
+						end
 						if (SessionHost := players_get_host()) and SessionHost ~= players_get_script_host() then
 							GiveScriptHostToPlayer(SessionHost)
 						end
