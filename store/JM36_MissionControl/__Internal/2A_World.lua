@@ -129,19 +129,18 @@ World = setmetatable
 									local SelfCoords = GetFinalRenderedCamCoord() --Player.Coords
 									local Count = 0
 									for _Value as Handle do
-										local HandleObject = GET_PICKUP_OBJECT(Handle)
-										local Model = GET_ENTITY_MODEL(HandleObject)
-										local Coords = GET_PICKUP_COORDS(Handle)
-										local ScriptStr, ScriptInt = GetEntityScript(HandleObject,MemPtr)
+										local Model = GET_ENTITY_MODEL(Handle)
+										local Coords = GetEntityCoords(Handle)
+										local ScriptStr, ScriptInt = GetEntityScript(Handle,MemPtr)
 										Count += 1
 										Value[Count] =
 										{
 											--Pointer = Pointer,
 											--Handle = Handle,
-											Handle = HandleObject,
+											Handle = Handle,
 											ModelHash = Model,
 											ModelString = util_reverse_joaat(Model),
-											--Dead = IsEntityDead(HandleObject),
+											--Dead = IsEntityDead(Handle),
 											Coords = Coords,
 											Distance = Coords:distance(SelfCoords),
 											ScriptStr = ScriptStr,
