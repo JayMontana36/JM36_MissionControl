@@ -54,8 +54,18 @@ Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(o
 							PlayerScriptHostRef = PlayerScriptHostRefs[PlayerId]
 						until PlayerScriptHostRef or PlayerId == 32
 						if PlayerScriptHostRef then
+							local TimeSwitch = Info.Time + Delay
 							PlayerScriptHostRef:trigger()
-							yield(Delay)
+							yield(500)
+							local StillHere
+							repeat
+								yield_once()
+								StillHere = players_exists(PlayerId)
+								if StillHere and players_get_script_host() ~= PlayerId then
+									PlayerScriptHostRef:trigger()
+									yield(500)
+								end
+							until not StillHere or Info.Time > TimeSwitch
 						else PlayerId = -1 end
 					else
 						yield_once()
