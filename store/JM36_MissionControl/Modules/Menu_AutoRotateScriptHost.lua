@@ -1,5 +1,6 @@
 local DummyCmdTbl = _G2.DummyCmdTbl
 
+local Info = Info
 local CreateThread = JM36.CreateThread
 local yield = JM36.yield
 local yield_once = JM36.yield_once
@@ -8,6 +9,7 @@ local players_get_host = players.get_host
 local players_get_script_host = players.get_script_host
 local util_is_session_started = util.is_session_started
 local util_is_session_transition_active = util.is_session_transition_active
+local players_exists = players.exists
 
 local NetworkIsActivitySession = NetworkIsActivitySession
 
@@ -75,6 +77,13 @@ end)
 
 return{
 	join	=	function(PlayerId, PlayerRoot)
+					local TimeAdd = Info.Time + 105000 -- 1m45s aka 90s+15s
+					local StillHere
+					repeat
+						yield_once()
+						StillHere = players_exists(PlayerId)
+					until not StillHere or Info.Time > TimeAdd
+					if not StillHere then return end
 					PlayerScriptHostRefs[PlayerId] = PlayerRoot:refByRelPath"Friendly>Give Script Host"
 				end,
 	left	=	function(PlayerId, PlayerName)
