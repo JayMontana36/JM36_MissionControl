@@ -23,7 +23,7 @@ local GiveScriptHostToPlayer = function(PlayerId)
 	end
 end
 
-local Enabled, ActivitySessionOnly, Delay = true, true, 20000
+local Enabled, ActivitySessionOnly, Delay = false, true, 20000
 local ___Pause;do
 	local ARSH = Script("AutoRotateScriptHost")
 	--ARSH.IsEnabled = function()return Enabled end
