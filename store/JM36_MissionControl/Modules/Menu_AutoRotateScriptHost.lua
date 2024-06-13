@@ -15,7 +15,7 @@ local NetworkIsActivitySession = NetworkIsActivitySession
 
 
 
-local PlayerScriptHostRefs = {[0]=false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false} -- 0-31
+local PlayerScriptHostRefs = {["Count"]=0,[0]=false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false} -- 0-31
 
 local GiveScriptHostToPlayer = function(PlayerId)
 	if PlayerScriptHostRef := PlayerScriptHostRefs[PlayerId] then
@@ -39,6 +39,7 @@ Menu:toggle("Enable Automatic Script Host Rotation", DummyCmdTbl, "", function(o
 		CreateThread(function()
 			local PlayerId, PlayerScriptHostRef = -1, false
 			while Enabled do
+				while PlayerScriptHostRefs.Count == 0 do yield_once() end
 				if util_is_session_started() and not util_is_session_transition_active() then
 					if NetworkIsActivitySession() then
 						while ___Pause do
@@ -95,8 +96,12 @@ return{
 					until not StillHere or Info.Time > TimeAdd
 					if not StillHere then return end
 					PlayerScriptHostRefs[PlayerId] = PlayerRoot:refByRelPath"Friendly>Give Script Host"
+					PlayerScriptHostRefs.Count = PlayerScriptHostRefs.Count + 1
 				end,
 	left	=	function(PlayerId, PlayerName)
-					PlayerScriptHostRefs[PlayerId] = false
+					if PlayerScriptHostRefs[PlayerId] then
+						PlayerScriptHostRefs[PlayerId] = false
+						PlayerScriptHostRefs.Count = PlayerScriptHostRefs.Count - 1
+					end
 				end,
 }
