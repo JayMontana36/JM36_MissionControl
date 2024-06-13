@@ -88,13 +88,15 @@ end)
 
 return{
 	join	=	function(PlayerId, PlayerRoot)
-					local TimeAdd = Info.Time + 105000 -- 1m45s aka 90s+15s
-					local StillHere
-					repeat
-						yield_once()
-						StillHere = players_exists(PlayerId)
-					until not StillHere or Info.Time > TimeAdd
-					if not StillHere then return end
+					if not NetworkIsActivitySession() then
+						local TimeAdd = Info.Time + 105000 -- 1m45s aka 90s+15s
+						local StillHere
+						repeat
+							yield_once()
+							StillHere = players_exists(PlayerId)
+						until not StillHere or Info.Time > TimeAdd
+						if not StillHere then return end
+					end
 					PlayerScriptHostRefs[PlayerId] = PlayerRoot:refByRelPath"Friendly>Give Script Host"
 					PlayerScriptHostRefs.Count = PlayerScriptHostRefs.Count + 1
 				end,
